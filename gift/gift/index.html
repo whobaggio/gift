@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>❤️</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+    .screen { position: fixed; left: 50%; top: 50%; width: 100vw; height: 100vh; width: 100dvw; height: 100dvh; transform: translate(-50%, -50%); overflow: hidden; background: #000; }
+    video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
+    @media (orientation: portrait) {
+      .screen { width: 100vh; height: 100vw; width: 100dvh; height: 100dvw; transform: translate(-50%, -50%) rotate(90deg); }
+    }
+    button { position: absolute; z-index: 2; left: 50%; bottom: max(32px, env(safe-area-inset-bottom)); transform: translateX(-50%); padding: 16px 24px; border: 1px solid #ffffff70; border-radius: 999px; background: #ffffffed; color: #171717; font: 600 17px system-ui, sans-serif; white-space: nowrap; cursor: pointer; box-shadow: 0 4px 24px #0005; }
+    button[hidden] { display: none; }
+    #status { position: absolute; z-index: 2; top: 20px; left: 16px; right: 16px; color: white; background: #000b; border-radius: 12px; padding: 12px; font: 15px system-ui, sans-serif; text-align: center; }
+    #status:empty { display: none; }
+  </style>
+</head>
+<body>
+  <main class="screen">
+  <video autoplay muted loop playsinline preload="auto" aria-label="Видео">
+    <source src="IMG_7601.MP4" type="video/mp4">
+  </video>
+  <button id="sound" type="button">🔊 Включить звук</button>
+  <p id="status" role="status"></p>
+  </main>
+  <script>
+    const video = document.querySelector('video');
+    const button = document.getElementById('sound');
+    const status = document.getElementById('status');
+    video.muted = true;
+    video.play().catch(() => { button.textContent = '▶ Смотреть со звуком'; });
+    button.addEventListener('click', () => {
+      video.muted = false;
+      video.volume = 1;
+      video.play().then(() => { button.hidden = true; }).catch(() => {
+        button.hidden = false;
+        button.textContent = '▶ Попробовать ещё раз';
+      });
+    });
+    video.addEventListener('playing', () => {
+      status.textContent = '';
+      button.hidden = !video.muted;
+    });
+    const showError = () => {
+      status.textContent = 'Видео не загрузилось. Проверь интернет и обнови страницу.';
+    };
+    video.addEventListener('error', showError);
+    video.querySelector('source').addEventListener('error', showError);
+  </script>
+</body>
+</html>
